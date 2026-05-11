@@ -379,6 +379,31 @@
           SUPABASE_ANON_KEY
         );
 
+        const sendTelegramNotification = async function (payload) {
+          const telegramMessage = [
+            "🔔 CÓ KHÁCH HÀNG MỚI ĐĂNG KÝ!",
+            `👤 Tên: ${payload.name}`,
+            `📞 SĐT: ${payload.phone}`,
+            `📝 Ghi chú: ${payload.request_content}`,
+          ].join("\n");
+
+          const telegramResponse = await fetch(
+            `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: telegramMessage,
+              }),
+            }
+          );
+
+          if (!telegramResponse.ok) {
+            throw new Error("Telegram API request failed");
+          }
+        };
+
         form.addEventListener("submit", async function (event) {
           event.preventDefault();
 
@@ -420,33 +445,9 @@
               statusEl.textContent = "Có lỗi xảy ra.";
               statusEl.style.color = "#b42318";
             } else {
-              const telegramMessage = [
-                "🔔 Lead mới từ Alicia Clothes",
-                `👤 Tên: ${payload.name}`,
-                `📞 Số điện thoại: ${payload.phone}`,
-                `📝 Nội dung yêu cầu: ${payload.request_content}`,
-              ].join("\n");
-
-              const telegramResponse = await fetch(
-                `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-                {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: telegramMessage,
-                  }),
-                }
-              );
-
-              if (!telegramResponse.ok) {
-                statusEl.textContent =
-                  "Đã lưu dữ liệu nhưng gửi thông báo Telegram thất bại.";
-                statusEl.style.color = "#b42318";
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Gửi";
-                return;
-              }
+              sendTelegramNotification(payload).catch(function (error) {
+                console.error(error);
+              });
 
               statusEl.textContent = "Gửi thành công!";
               statusEl.style.color = "#0f7a2e";
