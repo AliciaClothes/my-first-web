@@ -83,6 +83,15 @@
                 required
               />
 
+              <label for="request_content">Nội dung yêu cầu</label>
+              <input
+                id="request_content"
+                name="request_content"
+                type="text"
+                placeholder="Ví dụ: Mẫu váy công sở, size M"
+                required
+              />
+
               <button class="btn btn-primary btn-block" type="submit">
                 Gửi
               </button>
@@ -358,6 +367,8 @@
         const SUPABASE_URL = "https://hwpcvbisuiywznhvrpvm.supabase.co";
         const SUPABASE_ANON_KEY =
           "sb_publishable_ODKrB-6FHZmYnBQU3Z5eFg_Zb9ODyRt";
+        const TELEGRAM_BOT_TOKEN = "8745764476:AAF8PXLxzjr_0xtvgtgf6XpMdc6nj_iqGvY";
+        const TELEGRAM_CHAT_ID = "6190548679";
 
         const form = document.getElementById("lead-form");
         const statusEl = document.getElementById("form-status");
@@ -377,9 +388,20 @@
             name: String(formData.get("name") || "").trim(),
             email: String(formData.get("email") || "").trim(),
             phone: String(formData.get("phone") || "").trim(),
+            request_content: String(formData.get("request_content") || "").trim(),
+          };
+          const supabasePayload = {
+            name: payload.name,
+            email: payload.email,
+            phone: payload.phone,
           };
 
-          if (!payload.name || !payload.email || !payload.phone) {
+          if (
+            !payload.name ||
+            !payload.email ||
+            !payload.phone ||
+            !payload.request_content
+          ) {
             statusEl.textContent = "Vui lòng điền đầy đủ thông tin.";
             statusEl.style.color = "#b42318";
             return;
@@ -390,12 +412,42 @@
           statusEl.textContent = "";
 
           try {
-            const result = await supabaseClient.from("leads").insert([payload]);
+            const result = await supabaseClient
+              .from("leads")
+              .insert([supabasePayload]);
 
             if (result.error) {
               statusEl.textContent = "Có lỗi xảy ra.";
               statusEl.style.color = "#b42318";
             } else {
+              const telegramMessage = [
+                "🔔 Lead mới từ Alicia Clothes",
+                `👤 Tên: ${payload.name}`,
+                `📞 Số điện thoại: ${payload.phone}`,
+                `📝 Nội dung yêu cầu: ${payload.request_content}`,
+              ].join("\n");
+
+              const telegramResponse = await fetch(
+                `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: telegramMessage,
+                  }),
+                }
+              );
+
+              if (!telegramResponse.ok) {
+                statusEl.textContent =
+                  "Đã lưu dữ liệu nhưng gửi thông báo Telegram thất bại.";
+                statusEl.style.color = "#b42318";
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Gửi";
+                return;
+              }
+
               statusEl.textContent = "Gửi thành công!";
               statusEl.style.color = "#0f7a2e";
               form.reset();
