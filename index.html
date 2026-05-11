@@ -380,24 +380,37 @@
         );
 
         const sendTelegramNotification = async function (payload) {
+          const stripMarkdownLikeChars = function (value) {
+            return String(value || "").replace(/[*_\[\]`]/g, "");
+          };
+
+          const name = stripMarkdownLikeChars(payload.name);
+          const phone = stripMarkdownLikeChars(payload.phone);
+          const note = stripMarkdownLikeChars(payload.request_content);
+
           const telegramMessage = [
-            "🔔 CÓ KHÁCH HÀNG MỚI ĐĂNG KÝ!",
-            `👤 Tên: ${payload.name}`,
-            `📞 SĐT: ${payload.phone}`,
-            `📝 Ghi chú: ${payload.request_content}`,
+            "CO KHACH HANG MOI DANG KY",
+            "Ten: " + name,
+            "SDT: " + phone,
+            "Ghi chu: " + note,
           ].join("\n");
 
-          const telegramResponse = await fetch(
-            `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: telegramMessage,
-              }),
-            }
-          );
+          const telegramUrl =
+            "https://api.telegram.org/bot" +
+            TELEGRAM_BOT_TOKEN +
+            "/sendMessage";
+
+          console.log("Telegram sendMessage URL:", telegramUrl);
+
+          const params = new URLSearchParams();
+          params.set("chat_id", TELEGRAM_CHAT_ID);
+          params.set("text", telegramMessage);
+
+          const telegramResponse = await fetch(telegramUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: params.toString(),
+          });
 
           if (!telegramResponse.ok) {
             throw new Error("Telegram API request failed");
