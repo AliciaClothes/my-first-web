@@ -379,13 +379,18 @@
           SUPABASE_ANON_KEY
         );
 
-        const sendTelegramNotification = async function (payload) {
+        const sendTelegramNotification = async function ({
+          name,
+          email,
+          phone,
+          request_content,
+        }) {
           const telegramMessage = [
             "CO KHACH HANG MOI DANG KY",
-            "Ten: " + String(payload.name || ""),
-            "Email: " + String(payload.email || ""),
-            "SDT: " + String(payload.phone || ""),
-            "Ghi chu: " + String(payload.request_content || ""),
+            "Ten: " + String(name || ""),
+            "Email: " + String(email || ""),
+            "SDT: " + String(phone || ""),
+            "Ghi chu: " + String(request_content || ""),
           ].join("\n");
 
           const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
@@ -408,10 +413,13 @@
           event.preventDefault();
 
           const submitBtn = form.querySelector('button[type="submit"]');
+          const emailInput = form.querySelector("#email");
           const formData = new FormData(form);
           const payload = {
             name: String(formData.get("name") || "").trim(),
-            email: String(formData.get("email") || "").trim(),
+            email: String(
+              formData.get("email") || (emailInput && emailInput.value) || ""
+            ).trim(),
             phone: String(formData.get("phone") || "").trim(),
             request_content: String(formData.get("request_content") || "").trim(),
           };
