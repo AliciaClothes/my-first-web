@@ -383,6 +383,7 @@
           const telegramMessage = [
             "CO KHACH HANG MOI DANG KY",
             "Ten: " + String(payload.name || ""),
+            "Email: " + String(payload.email || ""),
             "SDT: " + String(payload.phone || ""),
             "Ghi chu: " + String(payload.request_content || ""),
           ].join("\n");
