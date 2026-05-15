@@ -367,15 +367,16 @@
           "sb_publishable_ODKrB-6FHZmYnBQU3Z5eFg_Zb9ODyRt";
         const TELEGRAM_BOT_TOKEN = "8745764476:AAF8PXLxzjr_0xtvgtgf6XpMdc6nj_iqGvY";
         const TELEGRAM_CHAT_ID = "8773604801";
+        // Sau khi Deploy Google Apps Script (xem google-apps-script/Code.gs), dán URL Web app vào đây:
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbySb9tXOHJcoaseA-M7m4Dkd_UFQx3qOEvpXUl05l8WGLHMeZDI-vio4pxwI6FfMUtD/exec";
 
         const form = document.getElementById("lead-form");
         const statusEl = document.getElementById("form-status");
-        if (!form || !statusEl || !window.supabase) return;
+        if (!form || !statusEl) return;
 
-        const supabaseClient = window.supabase.createClient(
-          SUPABASE_URL,
-          SUPABASE_ANON_KEY
-        );
+        const supabaseClient =
+          window.supabase &&
+          window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const sendTelegramNotification = async function ({
           name,
@@ -405,6 +406,29 @@
           if (!telegramResponse.ok) {
             throw new Error("Telegram API request failed");
           }
+        };
+
+        const sendToGoogleSheet = async function (payload) {
+          if (!GOOGLE_SCRIPT_URL) return { skipped: true };
+
+          const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload),
+          });
+
+          if (!response.ok) {
+            throw new Error("Google Apps Script request failed");
+          }
+
+          const result = await response.json();
+          if (!result || !result.ok) {
+            throw new Error(
+              (result && result.error) || "Google Apps Script returned error"
+            );
+          }
+
+          return result;
         };
 
         form.addEventListener("submit", async function (event) {
@@ -443,24 +467,41 @@
           statusEl.textContent = "";
 
           try {
-            const result = await supabaseClient
-              .from("leads")
-              .insert([supabasePayload]);
+            let saved = false;
 
-            if (result.error) {
-              statusEl.textContent = "Có lỗi xảy ra.";
-              statusEl.style.color = "#b42318";
-            } else {
-              sendTelegramNotification(payload).catch(function (error) {
-                console.error(error);
-              });
-
-              statusEl.textContent = "Gửi thành công!";
-              statusEl.style.color = "#0f7a2e";
-              form.reset();
+            if (GOOGLE_SCRIPT_URL) {
+              await sendToGoogleSheet(payload);
+              saved = true;
             }
+
+            if (supabaseClient) {
+              const result = await supabaseClient
+                .from("leads")
+                .insert([supabasePayload]);
+
+              if (result.error) {
+                throw result.error;
+              }
+              saved = true;
+            }
+
+            if (!saved) {
+              statusEl.textContent =
+                "Chưa cấu hình nhận lead. Liên hệ quản trị website.";
+              statusEl.style.color = "#b42318";
+              return;
+            }
+
+            sendTelegramNotification(payload).catch(function (error) {
+              console.error(error);
+            });
+
+            statusEl.textContent = "Gửi thành công!";
+            statusEl.style.color = "#0f7a2e";
+            form.reset();
           } catch (error) {
-            statusEl.textContent = "Có lỗi xảy ra.";
+            console.error(error);
+            statusEl.textContent = "Có lỗi xảy ra. Vui lòng thử lại sau.";
             statusEl.style.color = "#b42318";
           }
 
