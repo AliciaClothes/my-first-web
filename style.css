@@ -216,6 +216,49 @@ h1 span {
   outline: 3px solid rgba(255, 19, 178, 0.14);
 }
 
+.choice-group {
+  border: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.choice-group legend {
+  font-size: 0.93rem;
+  font-weight: 600;
+  padding: 0;
+  margin-bottom: 4px;
+}
+
+.choice-hint {
+  margin: 0 0 8px;
+  font-size: 0.84rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.choice-options {
+  display: grid;
+  gap: 8px;
+}
+
+.choice-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.93rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.choice-option input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
 .tiny-note {
   margin-top: 14px;
   font-size: 0.84rem;

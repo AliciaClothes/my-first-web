@@ -81,12 +81,63 @@
                 required
               />
 
-              <label for="request_content">Nội dung yêu cầu</label>
+              <fieldset class="choice-group">
+                <legend>
+                  2 điều bạn quan tâm nhất khi chọn quần áo
+                </legend>
+                <p class="choice-hint">Chọn đúng 2 lựa chọn</p>
+                <div class="choice-options">
+                  <label class="choice-option">
+                    <input
+                      type="checkbox"
+                      name="clothing_interests"
+                      value="Chất liệu"
+                    />
+                    <span>Chất liệu</span>
+                  </label>
+                  <label class="choice-option">
+                    <input
+                      type="checkbox"
+                      name="clothing_interests"
+                      value="Giá"
+                    />
+                    <span>Giá</span>
+                  </label>
+                  <label class="choice-option">
+                    <input
+                      type="checkbox"
+                      name="clothing_interests"
+                      value="Kiểu dáng"
+                    />
+                    <span>Kiểu dáng</span>
+                  </label>
+                  <label class="choice-option">
+                    <input
+                      type="checkbox"
+                      name="clothing_interests"
+                      value="Thương hiệu"
+                    />
+                    <span>Thương hiệu</span>
+                  </label>
+                  <label class="choice-option">
+                    <input
+                      type="checkbox"
+                      name="clothing_interests"
+                      value="Cho phép đổi/ trả"
+                    />
+                    <span>Cho phép đổi/ trả</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <label for="expected_dress_price"
+                >Mức giá chi trả dự kiến cho 1 chiếc váy đầm liền thân</label
+              >
               <input
-                id="request_content"
-                name="request_content"
+                id="expected_dress_price"
+                name="expected_dress_price"
                 type="text"
-                placeholder="Ví dụ: Mẫu váy công sở, size M"
+                placeholder="Ví dụ: 500-800k"
                 required
               />
 
@@ -384,18 +435,34 @@
           window.supabase &&
           window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        const interestCheckboxes = form.querySelectorAll(
+          'input[name="clothing_interests"]'
+        );
+        interestCheckboxes.forEach(function (checkbox) {
+          checkbox.addEventListener("change", function () {
+            const checked = form.querySelectorAll(
+              'input[name="clothing_interests"]:checked'
+            );
+            if (checked.length > 2) {
+              this.checked = false;
+            }
+          });
+        });
+
         const sendTelegramNotification = async function ({
           name,
           email,
           phone,
-          request_content,
+          clothing_interests,
+          expected_dress_price,
         }) {
           const telegramMessage = [
             "CO KHACH HANG MOI DANG KY",
             "Ten: " + String(name || ""),
             "Email: " + String(email || ""),
             "SDT: " + String(phone || ""),
-            "Ghi chu: " + String(request_content || ""),
+            "Quan tam: " + String(clothing_interests || ""),
+            "Muc gia vay: " + String(expected_dress_price || ""),
           ].join("\n");
 
           const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
@@ -443,13 +510,23 @@
           const submitBtn = form.querySelector('button[type="submit"]');
           const emailInput = form.querySelector("#email");
           const formData = new FormData(form);
+          const selectedInterests = formData
+            .getAll("clothing_interests")
+            .map(function (value) {
+              return String(value || "").trim();
+            })
+            .filter(Boolean);
+
           const payload = {
             name: String(formData.get("name") || "").trim(),
             email: String(
               formData.get("email") || (emailInput && emailInput.value) || ""
             ).trim(),
             phone: String(formData.get("phone") || "").trim(),
-            request_content: String(formData.get("request_content") || "").trim(),
+            clothing_interests: selectedInterests.join(", "),
+            expected_dress_price: String(
+              formData.get("expected_dress_price") || ""
+            ).trim(),
           };
           const supabasePayload = {
             name: payload.name,
@@ -461,9 +538,13 @@
             !payload.name ||
             !payload.email ||
             !payload.phone ||
-            !payload.request_content
+            selectedInterests.length !== 2 ||
+            !payload.expected_dress_price
           ) {
-            statusEl.textContent = "Vui lòng điền đầy đủ thông tin.";
+            statusEl.textContent =
+              selectedInterests.length !== 2
+                ? "Vui lòng chọn đúng 2 điều bạn quan tâm nhất."
+                : "Vui lòng điền đầy đủ thông tin.";
             statusEl.style.color = "#b42318";
             return;
           }

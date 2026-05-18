@@ -3,7 +3,7 @@
  *
  * CÁCH CÀI ĐẶT (làm một lần):
  * 1. Mở https://sheets.google.com → Tạo bảng mới (vd: "Alicia Leads")
- * 2. Hàng 1 gõ tiêu đề: Thời gian | Tên | Email | SĐT | Nội dung yêu cầu
+ * 2. Hàng 1 gõ tiêu đề: Thời gian | Tên | Email | SĐT | Quan tâm | Mức giá váy
  * 3. Extensions → Apps Script → dán toàn bộ file này → Save
  * 4. Sửa NOTIFY_EMAIL bên dưới nếu cần
  * 5. Deploy → New deployment → Type: Web app
@@ -23,9 +23,10 @@ function doPost(e) {
     const name = String(data.name || "").trim();
     const email = String(data.email || "").trim();
     const phone = String(data.phone || "").trim();
-    const requestContent = String(data.request_content || "").trim();
+    const clothingInterests = String(data.clothing_interests || "").trim();
+    const expectedDressPrice = String(data.expected_dress_price || "").trim();
 
-    if (!name || !email || !phone || !requestContent) {
+    if (!name || !email || !phone || !clothingInterests || !expectedDressPrice) {
       return jsonResponse({ ok: false, error: "missing_fields" });
     }
 
@@ -39,7 +40,14 @@ function doPost(e) {
       "dd/MM/yyyy HH:mm:ss"
     );
 
-    sheet.appendRow([timestamp, name, email, phone, requestContent]);
+    sheet.appendRow([
+      timestamp,
+      name,
+      email,
+      phone,
+      clothingInterests,
+      expectedDressPrice,
+    ]);
 
     const subject = "[Alicia Clothes] Lead mới: " + name;
     const body = [
@@ -49,7 +57,8 @@ function doPost(e) {
       "Tên: " + name,
       "Email: " + email,
       "SĐT: " + phone,
-      "Nội dung yêu cầu: " + requestContent,
+      "Quan tâm: " + clothingInterests,
+      "Mức giá váy: " + expectedDressPrice,
     ].join("\n");
 
     MailApp.sendEmail({
