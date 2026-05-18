@@ -47,50 +47,55 @@
               <span>Cam kết hoàn tiền 100% nếu không đúng ảnh</span>
             </div>
           </div>
-          <aside class="hero-card" id="dang-ky">
+          <aside class="hero-card hero-card--embed" id="dang-ky">
             <h2>Trở thành Khách hàng ưu tiên (0đ)</h2>
             <p>
               Nằm trong <strong>50 người đầu tiên</strong> được báo khi
               có mẫu độc quyền.
             </p>
-            <form class="signup-form" id="lead-form" action="#" method="post">
-              <label for="name">Tên của bạn</label>
+            <form
+              class="signup-form signup-form--compact"
+              id="lead-form"
+              action="https://docs.google.com/forms/d/e/1FAIpQLSdFhUEugDqEdN6k2dNlne7jqA79046EsoRvgefz9R79UCTQ0g/formResponse"
+              method="POST"
+              target="google-form-target"
+            >
+              <label for="gf-name">Tên của bạn</label>
               <input
-                id="name"
-                name="name"
+                id="gf-name"
+                name="entry.881187115"
                 type="text"
                 placeholder="Nguyễn Văn A"
                 required
               />
 
-              <label for="email">Email</label>
+              <label for="gf-email">Email</label>
               <input
-                id="email"
-                name="email"
+                id="gf-email"
+                name="entry.2072230264"
                 type="email"
                 placeholder="ban@example.com"
                 required
               />
 
-              <label for="phone">Số điện thoại</label>
+              <label for="gf-phone">Số điện thoại</label>
               <input
-                id="phone"
-                name="phone"
+                id="gf-phone"
+                name="entry.1730671890"
                 type="tel"
                 placeholder="09xx xxx xxx"
                 required
               />
 
-              <fieldset class="choice-group">
+              <fieldset class="choice-group choice-group--compact">
                 <legend>
                   2 điều bạn quan tâm nhất khi chọn quần áo
                 </legend>
-                <p class="choice-hint">Chọn đúng 2 lựa chọn</p>
-                <div class="choice-options">
+                <div class="choice-options choice-options--cols">
                   <label class="choice-option">
                     <input
                       type="checkbox"
-                      name="clothing_interests"
+                      name="entry.1336626419"
                       value="Chất liệu"
                     />
                     <span>Chất liệu</span>
@@ -98,7 +103,7 @@
                   <label class="choice-option">
                     <input
                       type="checkbox"
-                      name="clothing_interests"
+                      name="entry.1336626419"
                       value="Giá"
                     />
                     <span>Giá</span>
@@ -106,7 +111,7 @@
                   <label class="choice-option">
                     <input
                       type="checkbox"
-                      name="clothing_interests"
+                      name="entry.1336626419"
                       value="Kiểu dáng"
                     />
                     <span>Kiểu dáng</span>
@@ -114,7 +119,7 @@
                   <label class="choice-option">
                     <input
                       type="checkbox"
-                      name="clothing_interests"
+                      name="entry.1336626419"
                       value="Thương hiệu"
                     />
                     <span>Thương hiệu</span>
@@ -122,7 +127,7 @@
                   <label class="choice-option">
                     <input
                       type="checkbox"
-                      name="clothing_interests"
+                      name="entry.1336626419"
                       value="Cho phép đổi/ trả"
                     />
                     <span>Cho phép đổi/ trả</span>
@@ -130,26 +135,58 @@
                 </div>
               </fieldset>
 
-              <label for="expected_dress_price"
-                >Mức giá chi trả dự kiến cho 1 chiếc váy đầm liền thân</label
-              >
-              <input
-                id="expected_dress_price"
-                name="expected_dress_price"
-                type="text"
-                placeholder="Ví dụ: 500-800k"
-                required
-              />
+              <fieldset class="choice-group choice-group--compact">
+                <legend>Mức giá bạn sẵn sàng chi cho 1 chiếc váy</legend>
+                <div class="choice-options choice-options--cols">
+                  <label class="choice-option">
+                    <input
+                      type="radio"
+                      name="entry.614691816"
+                      value="300 - 500"
+                      required
+                    />
+                    <span>300 - 500</span>
+                  </label>
+                  <label class="choice-option">
+                    <input
+                      type="radio"
+                      name="entry.614691816"
+                      value="400-600"
+                    />
+                    <span>400-600</span>
+                  </label>
+                  <label class="choice-option">
+                    <input
+                      type="radio"
+                      name="entry.614691816"
+                      value="500 - 1 triệu"
+                    />
+                    <span>500 - 1 triệu</span>
+                  </label>
+                  <label class="choice-option">
+                    <input
+                      type="radio"
+                      name="entry.614691816"
+                      value="800 - 2triệu"
+                    />
+                    <span>800 - 2triệu</span>
+                  </label>
+                </div>
+              </fieldset>
 
               <button class="btn btn-primary btn-block" type="submit">
                 Gửi
               </button>
             </form>
+            <iframe
+              name="google-form-target"
+              class="google-form-hidden-frame"
+              title="Gửi dữ liệu Google Form"
+            ></iframe>
             <p
               id="form-status"
-              class="tiny-note"
+              class="tiny-note form-status"
               aria-live="polite"
-              style="margin-top: 10px; min-height: 1.6em"
             ></p>
             <p class="tiny-note">
               Chỉ dành cho thành viên đăng ký: link nhóm kín Zalo và ưu đãi xả
@@ -394,7 +431,6 @@
       </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
       (function () {
         const carousels = document.querySelectorAll("[data-carousel]");
@@ -419,29 +455,18 @@
       })();
 
       (function () {
-        const SUPABASE_URL = "https://hwpcvbisuiywznhvrpvm.supabase.co";
-        const SUPABASE_ANON_KEY =
-          "sb_publishable_ODKrB-6FHZmYnBQU3Z5eFg_Zb9ODyRt";
-        const TELEGRAM_BOT_TOKEN = "8745764476:AAF8PXLxzjr_0xtvgtgf6XpMdc6nj_iqGvY";
-        const TELEGRAM_CHAT_ID = "8773604801";
-        // Sau khi Deploy Google Apps Script (xem google-apps-script/Code.gs), dán URL Web app vào đây:
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbySb9tXOHJcoaseA-M7m4Dkd_UFQx3qOEvpXUl05l8WGLHMeZDI-vio4pxwI6FfMUtD/exec";
-
         const form = document.getElementById("lead-form");
         const statusEl = document.getElementById("form-status");
         if (!form || !statusEl) return;
 
-        const supabaseClient =
-          window.supabase &&
-          window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
         const interestCheckboxes = form.querySelectorAll(
-          'input[name="clothing_interests"]'
+          'input[name="entry.1336626419"]'
         );
+
         interestCheckboxes.forEach(function (checkbox) {
           checkbox.addEventListener("change", function () {
             const checked = form.querySelectorAll(
-              'input[name="clothing_interests"]:checked'
+              'input[name="entry.1336626419"]:checked'
             );
             if (checked.length > 2) {
               this.checked = false;
@@ -449,151 +474,31 @@
           });
         });
 
-        const sendTelegramNotification = async function ({
-          name,
-          email,
-          phone,
-          clothing_interests,
-          expected_dress_price,
-        }) {
-          const telegramMessage = [
-            "CO KHACH HANG MOI DANG KY",
-            "Ten: " + String(name || ""),
-            "Email: " + String(email || ""),
-            "SDT: " + String(phone || ""),
-            "Quan tam: " + String(clothing_interests || ""),
-            "Muc gia vay: " + String(expected_dress_price || ""),
-          ].join("\n");
+        form.addEventListener("submit", function (event) {
+          const checked = form.querySelectorAll(
+            'input[name="entry.1336626419"]:checked'
+          );
 
-          const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-
-          const telegramResponse = await fetch(telegramUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: TELEGRAM_CHAT_ID,
-              text: telegramMessage,
-            }),
-          });
-
-          if (!telegramResponse.ok) {
-            throw new Error("Telegram API request failed");
-          }
-        };
-
-        const sendToGoogleSheet = async function (payload) {
-          if (!GOOGLE_SCRIPT_URL) return { skipped: true };
-
-          const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify(payload),
-          });
-
-          if (!response.ok) {
-            throw new Error("Google Apps Script request failed");
-          }
-
-          const result = await response.json();
-          if (!result || !result.ok) {
-            throw new Error(
-              (result && result.error) || "Google Apps Script returned error"
-            );
-          }
-
-          return result;
-        };
-
-        form.addEventListener("submit", async function (event) {
-          event.preventDefault();
-
-          const submitBtn = form.querySelector('button[type="submit"]');
-          const emailInput = form.querySelector("#email");
-          const formData = new FormData(form);
-          const selectedInterests = formData
-            .getAll("clothing_interests")
-            .map(function (value) {
-              return String(value || "").trim();
-            })
-            .filter(Boolean);
-
-          const payload = {
-            name: String(formData.get("name") || "").trim(),
-            email: String(
-              formData.get("email") || (emailInput && emailInput.value) || ""
-            ).trim(),
-            phone: String(formData.get("phone") || "").trim(),
-            clothing_interests: selectedInterests.join(", "),
-            expected_dress_price: String(
-              formData.get("expected_dress_price") || ""
-            ).trim(),
-          };
-          const supabasePayload = {
-            name: payload.name,
-            email: payload.email,
-            phone: payload.phone,
-          };
-
-          if (
-            !payload.name ||
-            !payload.email ||
-            !payload.phone ||
-            selectedInterests.length !== 2 ||
-            !payload.expected_dress_price
-          ) {
+          if (checked.length !== 2) {
+            event.preventDefault();
             statusEl.textContent =
-              selectedInterests.length !== 2
-                ? "Vui lòng chọn đúng 2 điều bạn quan tâm nhất."
-                : "Vui lòng điền đầy đủ thông tin.";
+              "Vui lòng chọn đúng 2 điều bạn quan tâm nhất.";
             statusEl.style.color = "#b42318";
             return;
           }
 
+          const submitBtn = form.querySelector('button[type="submit"]');
           submitBtn.disabled = true;
           submitBtn.textContent = "Đang gửi...";
           statusEl.textContent = "";
 
-          try {
-            let saved = false;
-
-            if (GOOGLE_SCRIPT_URL) {
-              await sendToGoogleSheet(payload);
-              saved = true;
-            }
-
-            if (supabaseClient) {
-              const result = await supabaseClient
-                .from("leads")
-                .insert([supabasePayload]);
-
-              if (result.error) {
-                throw result.error;
-              }
-              saved = true;
-            }
-
-            if (!saved) {
-              statusEl.textContent =
-                "Chưa cấu hình nhận lead. Liên hệ quản trị website.";
-              statusEl.style.color = "#b42318";
-              return;
-            }
-
-            sendTelegramNotification(payload).catch(function (error) {
-              console.error(error);
-            });
-
-            statusEl.textContent = "Gửi thành công!";
+          window.setTimeout(function () {
+            statusEl.textContent = "Gửi thành công! Cảm ơn bạn đã đăng ký.";
             statusEl.style.color = "#0f7a2e";
             form.reset();
-          } catch (error) {
-            console.error(error);
-            statusEl.textContent = "Có lỗi xảy ra. Vui lòng thử lại sau.";
-            statusEl.style.color = "#b42318";
-          }
-
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Gửi";
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Gửi";
+          }, 1500);
         });
       })();
     </script>
